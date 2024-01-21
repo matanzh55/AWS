@@ -100,24 +100,17 @@ listener_arn=$(aws elbv2 create-listener \
   --output json \
   --query 'Listeners[0].ListenerArn')
 
-# Create Rule for default action (fixed response)
-aws elbv2 create-rule \
-  --listener-arn "$listener_arn" \
-  --priority 1 \
-  --conditions Field=path-pattern,Values='*' \
-  --actions Type=fixed-response,FixedResponseConfig.StatusCode=200,FixedResponseConfig.ContentType=text/plain,FixedResponseConfig.Content=OK
-
 # Create Rule for /red path
 aws elbv2 create-rule \
   --listener-arn "$listener_arn" \
-  --priority 2 \
+  --priority 1 \
   --conditions Field=path-pattern,Values='/red*' \
   --actions Type=forward,TargetGroupArn="$tg_red_arn"
 
 # Create Rule for /blue path
 aws elbv2 create-rule \
   --listener-arn "$listener_arn" \
-  --priority 3 \
+  --priority 2 \
   --conditions Field=path-pattern,Values='/blue*' \
   --actions Type=forward,TargetGroupArn="$tg_blue_arn"
 
