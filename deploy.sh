@@ -91,6 +91,13 @@ aws elbv2 register-targets \
   --target-group-arn $(echo $tg_blue_arn | sed 's/"//g') \
   --targets Id=$instance_blue_id
 
+# Remove quotes from the load balancer ARN
+alb_arn=$(echo "$alb_arn" | tr -d '"')
+
+# Remove quotes from the target group ARNs
+tg_red_arn=$(echo "$tg_red_arn" | tr -d '"')
+tg_blue_arn=$(echo "$tg_blue_arn" | tr -d '"')
+
 # 6. Listener with Rules
 listener_arn=$(aws elbv2 create-listener \
   --load-balancer-arn $alb_arn \
@@ -100,8 +107,8 @@ listener_arn=$(aws elbv2 create-listener \
   --output json \
   --query 'Listeners[0].ListenerArn')
 
-# Extract the listener ARN from the JSON output
-listener_arn=$(echo $listener_arn | jq -r '.Listeners[0].ListenerArn')
+# Remove quotes from the listener ARN
+listener_arn=$(echo "$listener_arn" | tr -d '"')
 
 # Create Rule for /red path
 aws elbv2 create-rule \
@@ -116,6 +123,7 @@ aws elbv2 create-rule \
   --priority 2 \
   --conditions Field=path-pattern,Values='/blue*' \
   --actions Type=forward,TargetGroupArn=$tg_blue_arn
+
 
 # Output results
 echo "ALB ARN: $alb_arn"
