@@ -93,7 +93,7 @@ aws elbv2 register-targets \
 
 # 6. Listener with Rules
 listener_arn=$(aws elbv2 create-listener \
-  --load-balancer-name MyALB \
+  --load-balancer-arn $alb_arn \
   --protocol HTTP \
   --port 80 \
   --default-actions Type=forward,TargetGroupArn=$tg_red_arn \
