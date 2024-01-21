@@ -93,10 +93,10 @@ aws elbv2 register-targets \
 
 # 6. Listener with Rules
 listener_arn=$(aws elbv2 create-listener \
-  --load-balancer-arn $alb_arn \
+  --load-balancer-arn "$alb_arn" \
   --protocol HTTP \
   --port 80 \
-  --default-actions Type=fixed-response,FixedResponseActionType=200,ContentType=text/plain,Content=OK \
+  --default-actions Type=fixed-response,FixedResponseConfig.StatusCode=200,FixedResponseConfig.ContentType=text/plain,FixedResponseConfig.Content=OK \
   --output json \
   --query 'Listeners[0].ListenerArn')
 
