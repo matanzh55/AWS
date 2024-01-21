@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Variables
-vpc_id="vpc-04c2582f68f0eed8f"
-subnet1_id="subnet-074a977b19ae594aa"
-subnet2_id="subnet-05da18daf347616b2"
+vpc_id="vpc-0bd70d6a9a37f9af4"
+subnet1_id="subnet-03a805b98138732a5"
+subnet2_id="subnet-0e32d48f940d6e158"
 ami_id="ami-0c7217cdde317cfec"  # Ubuntu AMI ID
 alb_name="MyALB"
 tg_red_name="TargetGroupRed"
