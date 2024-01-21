@@ -93,26 +93,29 @@ aws elbv2 register-targets \
 
 # 6. Listener with Rules
 listener_arn=$(aws elbv2 create-listener \
-  --load-balancer-name "MyALB" \
+  --load-balancer-name MyALB \
   --protocol HTTP \
   --port 80 \
-  --default-actions Type=forward,TargetGroupArn="$tg_red_arn" \
+  --default-actions Type=forward,TargetGroupArn=$tg_red_arn \
   --output json \
   --query 'Listeners[0].ListenerArn')
 
+# Extract the listener ARN from the JSON output
+listener_arn=$(echo $listener_arn | jq -r '.Listeners[0].ListenerArn')
+
 # Create Rule for /red path
 aws elbv2 create-rule \
-  --listener-arn "$listener_arn" \
+  --listener-arn $listener_arn \
   --priority 1 \
   --conditions Field=path-pattern,Values='/red*' \
-  --actions Type=forward,TargetGroupArn="$tg_red_arn"
+  --actions Type=forward,TargetGroupArn=$tg_red_arn
 
 # Create Rule for /blue path
 aws elbv2 create-rule \
-  --listener-arn "$listener_arn" \
+  --listener-arn $listener_arn \
   --priority 2 \
   --conditions Field=path-pattern,Values='/blue*' \
-  --actions Type=forward,TargetGroupArn="$tg_blue_arn"
+  --actions Type=forward,TargetGroupArn=$tg_blue_arn
 
 # Output results
 echo "ALB ARN: $alb_arn"
